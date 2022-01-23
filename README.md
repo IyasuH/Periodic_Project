@@ -43,3 +43,15 @@ Then I used prototype board to solder the IC bases (for the MAX7219) capacitors 
 I connect the VCC and GND pins of the bluetooth pins to the 5V and GND of the arduino pins. Then the TX pin of the bluetooth pin to RX pin of arduino and RX pin to TX pin of the arduino by parallelly connecting 1k and 2k ohm resistors as the following diagram.
 
 ![Arduino and bluetooth connection](https://i.ytimg.com/vi/lvPUOM8UR4I/maxresdefault.jpg)
+
+### The code
+
+The top of the code contains definitions of the pins of the Arduino and array definations of hex for each specific coditions.
+The only code in the loop is the code to read data from the serial connection (To which Bluetooth is attached) and call a function what to do with the commands it receives.
+
+*you can get other descriptions from the comments of the code*
+
+### Phone App
+
+The phone app is develop using [MIT APP Inventors](https://appinventor.mit.edu/)
+which is relatively easy to create andriod apps. And it uses easy to learn block-based programming.
