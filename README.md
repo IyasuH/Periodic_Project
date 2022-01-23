@@ -28,6 +28,6 @@ I arragnge the LEDs as two group of matrix to arrange them for the **MAX7219** c
 
 I connected the LEDs and the **MAX7219 IC drive** as the following diagram.
 ![max7219 and led connection](https://electronoobs.com/images/Arduino/tut_14/max_logo.png)
-And I connect the two **MAX7219 drivers** as the followinf diagram
+And I connect the two **MAX7219 drivers** as the following diagram
 ![max7219 and led connection](https://foto.askix.com/upload/2/29/229a8791cd375f9c0ee27f4816106142.jpg)
-As you can see it from the above diagram I parralely conect the 5v and GND pins.And I connect CLK pins of both drivers together and also the LOAD pins and the dataout of the first **MAX7219** to the datain of the second one.
+As you can see it from the above diagram I parralely conect the 5v and GND pins. And I connect CLK pins of both drivers together to pin 10 of arduino and also the LOAD pins of both drivers connect together to pin 11 of arduino. And the dataout of the first **MAX7219** to the datain of the second one. And the datain of the first one is connected to arduino pin 12. Therefore this way I can control the full LED matrix using only 5 pin from the arduino.
