@@ -57,3 +57,4 @@ The only code in the loop is the code to read data from the serial connection (T
 The phone app is develop using [MIT APP Inventors](https://appinventor.mit.edu/)
 which is relatively easy to create andriod apps. And it uses easy to learn block-based programming.
 
+The clock code is attached if you would like to check it out.
