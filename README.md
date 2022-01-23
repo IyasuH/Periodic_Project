@@ -2,7 +2,8 @@
 
 ##### The goal of this repo is to give you enough understanding of how the electronics and the code works
 >This project is about creting an interactive periodic table as a teching aid for teachers to demonstrate different properties of elements and how different elements relate to each other to students.
-> Electronics Used
+
+### Electronics Used
 * 118 white 4mm LEDs
 * Arduino uno
 * Hc-06 bluetooth module
