@@ -56,3 +56,6 @@ The only code in the loop is the code to read data from the serial connection (T
 
 The phone app is develop using [MIT APP Inventors](https://appinventor.mit.edu/)
 which is relatively easy to create andriod apps. And it uses easy to learn block-based programming.
+And the you can see my block code for my app below.
+
+![max7219 and led connection](C:\Users\Eyasu\Downloads\block_code.png)
