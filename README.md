@@ -24,10 +24,22 @@ The display is controled by mobile app using Bluetooth connectivity and for that
 #### Circuit Schematic
 
 ###### LED arrangement
-I arragnge the LEDs as two group of matrix to arrange them for the **MAX7219** controler where the first matrix of LED have 64 LEDs and the other matrix contains 54 LEDs. The main reason I confiugre the LEDs this way is to make coding of the MAX7219 easier and clear.
+I arragnge the LEDs as two group of matrix to arrange them for the **MAX7219** controler where the first matrix of LED have 64 LEDs and the other matrix contains 54 LEDs. The main reason I confiugre the LEDs this way is to make coding of the **MAX7219** easier and clear. Then I arrange the LED matrix as the shape of periodic table (I put the LEDs in the postion of each elements) then I did soldering of the anodes and cathodes as the following schematic.
 
 I connected the LEDs and the **MAX7219 IC drive** as the following diagram.
+
 ![max7219 and led connection](https://electronoobs.com/images/Arduino/tut_14/max_logo.png)
-And I connect the two **MAX7219 drivers** as the following diagram
+
+And I connect the two **MAX7219 drivers** as the following diagram.
+
 ![max7219 and led connection](https://foto.askix.com/upload/2/29/229a8791cd375f9c0ee27f4816106142.jpg)
-As you can see it from the above diagram I parralely conect the 5v and GND pins. And I connect CLK pins of both drivers together to pin 10 of arduino and also the LOAD pins of both drivers connect together to pin 11 of arduino. And the dataout of the first **MAX7219** to the datain of the second one. And the datain of the first one is connected to arduino pin 12. Therefore this way I can control the full LED matrix using only 5 pin from the arduino.
+
+As you can see it from the above diagram I connect CLK pins of both drivers together to pin 10 of arduino and also the LOAD pins of both drivers connect together to pin 11 of arduino. And the dataout of the first **MAX7219** to the datain of the second one. And the datain of the first one is connected to arduino pin 12. Therefore this way I can control the full LED matrix using only 5 pin from the arduino.
+
+Then I used prototype board to solder the IC bases (for the MAX7219) capacitors and resistors.
+
+###### Bluetooth connection
+
+I connect the VCC and GND pins of the bluetooth pins to the 5V and GND of the arduino pins. Then the TX pin of the bluetooth pin to RX pin of arduino and RX pin to TX pin of the arduino by parallelly connecting 1k and 2k ohm resistors as the following diagram.
+
+![Arduino and bluetooth connection](https://www.google.com/imgres?imgurl=https%3A%2F%2Fi.ytimg.com%2Fvi%2FlvPUOM8UR4I%2Fmaxresdefault.jpg&imgrefurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DlvPUOM8UR4I&tbnid=1lE3XNVeTZh4yM&vet=12ahUKEwjFwcvojMj1AhUSEmMBHY_1BugQMygSegUIARDbAQ..i&docid=XEPADaXiOw0DoM&w=1280&h=720&itg=1&q=hc-06%20and%20arduino%20uno&ved=2ahUKEwjFwcvojMj1AhUSEmMBHY_1BugQMygSegUIARDbAQ)
