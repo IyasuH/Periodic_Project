@@ -42,4 +42,4 @@ Then I used prototype board to solder the IC bases (for the MAX7219) capacitors 
 
 I connect the VCC and GND pins of the bluetooth pins to the 5V and GND of the arduino pins. Then the TX pin of the bluetooth pin to RX pin of arduino and RX pin to TX pin of the arduino by parallelly connecting 1k and 2k ohm resistors as the following diagram.
 
-![Arduino and bluetooth connection](https://aws1.discourse-cdn.com/arduino/original/4X/8/f/c/8fc1fae064ae0a2a1bc7dcc515babf1a86923929.jpeg)
+![Arduino and bluetooth connection](https://i.ytimg.com/vi/lvPUOM8UR4I/maxresdefault.jpg)
