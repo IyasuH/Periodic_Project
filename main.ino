@@ -1,0 +1,996 @@
+#include <LedControl.h>
+
+#define wait 50
+#define longg 2500
+
+#define DIN 12
+#define CLOCK 10
+#define CS 11
+
+char Incoming[15]; // bluetooth commands get turned into character array for parsing 
+
+/*const uint16_t discovered[118] PROGMEM = {1766, 1817, 1807, 1807, 1861, 1860, 1939, 1803,
+                                  1913, 1797, 1755, 1808, 1790, 1808, 1898, 1885,
+                                  1789, 1950, 1886, 1879, 1794, 1839, 1899, 1885,
+                                  1940, 1952, 1878, 1791, 1789, 1923, 1964, 1945,
+                                  1940, 1952, 1842, 1801, 1801, 1802, 1967, 1879,
+                                  1944, 1955, 1879, 1797, 1781, 1783, 1974, 1901,
+                                  1944, 1858, 1878, 1774, 1937, 1925, 1981, 1880,
+                                  1949, 1961, 1907, 0, 1844, 1803, 1984, 1843,
+                                  // done with array 1
+                                  1735, 1803, 1803, 1982, 1829,
+                                  2006, 1751, 1803, 1735, 1994, 2010,
+                                  1900, 0, 0, 0, 1994, 1940,
+                                  1898, 0, 1817, 0, 1996, 1811,
+                                  1898, 1808, 1825, 1875, 1863, 1861, 2004, 1826,
+                                  1894, 0, 1824, 1886, 0, 0, 1998, 1774,
+                                  1898, 1772, 1669, 1250, 0, 1400, 2004, 1886,
+                                  1895, 1774, 0, 1817, 1783, 1898, 2000};
+
+*/
+LedControl lc_0 = LedControl(DIN, CLOCK, CS, 2);
+//defination for elements
+//hydrogen
+const byte A1C1[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//lithium
+const byte A1C2[] PROGMEM = {0x40,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//sodium
+const byte A1C3[] PROGMEM = {0x20,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//potassium
+//cobalt
+const byte A1C4[] PROGMEM = {0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//rubidium
+//rhodium
+const byte A1C5[] PROGMEM = {0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//caesium
+//iridium
+const byte A1C6[] PROGMEM = {0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//francium
+//meitnerium
+const byte A1C7[] PROGMEM = {0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//cerium
+//thorium
+const byte A1C8[] PROGMEM = {0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+//oganesson
+//protactinium
+const byte A2C1[] PROGMEM = {0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00};
+//beryllium
+const byte A2C2[] PROGMEM = {0x00,0x40,0x00,0x00,0x00,0x00,0x00,0x00};
+//mangnesium
+const byte A2C3[] PROGMEM = {0x00,0x20,0x00,0x00,0x00,0x00,0x00,0x00};
+//calcium
+//nickel
+const byte A2C4[] PROGMEM = {0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00};
+//strontium
+//palladium
+const byte A2C5[] PROGMEM = {0x00,0x08,0x00,0x00,0x00,0x00,0x00,0x00};
+//barium
+//platinum
+const byte A2C6[] PROGMEM = {0x00,0x04,0x00,0x00,0x00,0x00,0x00,0x00};
+//radium
+//darmstadtium
+const byte A2C7[] PROGMEM = {0x00,0x02,0x00,0x00,0x00,0x00,0x00,0x00};
+//tennessine
+//praseodymium
+const byte A2C8[] PROGMEM = {0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
+
+//radon
+//uranium
+const byte A3C1[] PROGMEM = {0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00};
+//californium
+const byte A3C2[] PROGMEM = {0x00,0x00,0x40,0x00,0x00,0x00,0x00,0x00};
+//dysprosium
+const byte A3C3[] PROGMEM = {0x00,0x00,0x20,0x00,0x00,0x00,0x00,0x00};
+//scandium
+//copper
+const byte A3C4[] PROGMEM = {0x00,0x00,0x10,0x00,0x00,0x00,0x00,0x00};
+//yttrium
+//silver
+const byte A3C5[] PROGMEM = {0x00,0x00,0x08,0x00,0x00,0x00,0x00,0x00};
+//lanthanum
+//gold
+const byte A3C6[] PROGMEM = {0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00};
+//actinium
+//roentgenium
+const byte A3C7[] PROGMEM = {0x00,0x00,0x02,0x00,0x00,0x00,0x00,0x00};
+//astatine
+//neodymium
+const byte A3C8[] PROGMEM = {0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00};
+
+//xenon
+//neptunium
+const byte A4C1[] PROGMEM = {0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00};
+//einsteinium
+const byte A4C2[] PROGMEM = {0x00,0x00,0x00,0x40,0x00,0x00,0x00,0x00};
+//holmium
+const byte A4C3[] PROGMEM = {0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x00};
+//titanium
+//zinc
+const byte A4C4[] PROGMEM = {0x00,0x00,0x00,0x10,0x00,0x00,0x00,0x00};
+//zirconium
+//cadmium
+const byte A4C5[] PROGMEM = {0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x00};
+//hafnium
+//mercury
+const byte A4C6[] PROGMEM = {0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00};
+//rutherfordium
+//copernicium
+const byte A4C7[] PROGMEM = {0x00,0x00,0x00,0x02,0x00,0x00,0x00,0x00};
+//iodine
+//promethium
+const byte A4C8[] PROGMEM = {0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00};
+
+//krypton
+//plutonium
+const byte A5C1[] PROGMEM = {0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00};
+//boron
+//fermium
+const byte A5C2[] PROGMEM = {0x00,0x00,0x00,0x00,0x40,0x00,0x00,0x00};
+//alumiinum
+//erbium
+const byte A5C3[] PROGMEM = {0x00,0x00,0x00,0x00,0x20,0x00,0x00,0x00};
+//vanadium
+//gallium
+const byte A5C4[] PROGMEM = {0x00,0x00,0x00,0x00,0x10,0x00,0x00,0x00};
+//niobium
+//indium
+const byte A5C5[] PROGMEM = {0x00,0x00,0x00,0x00,0x08,0x00,0x00,0x00};
+//tantalum
+//thallium
+const byte A5C6[] PROGMEM = {0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00};
+//dubnium
+//nihonium
+const byte A5C7[] PROGMEM = {0x00,0x00,0x00,0x00,0x02,0x00,0x00,0x00};
+//bromine
+//samarium
+const byte A5C8[] PROGMEM = {0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x00};
+
+//argon
+//americium
+const byte A6C1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00};
+//carbon
+//mendelevium
+const byte A6C2[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x00};
+//silicon
+//thulium
+const byte A6C3[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x20,0x00,0x00};
+//chromium
+//germanium
+const byte A6C4[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x10,0x00,0x00};
+//molybdenum
+//tin
+const byte A6C5[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x00};
+//tungsten
+//lead
+const byte A6C6[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00};
+//seaborgium
+//flerovium
+const byte A6C7[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x02,0x00,0x00};
+//chlorine
+//europium
+const byte A6C8[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x00};
+
+//neon
+//curium  
+const byte A7C1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00};
+//nitrogen
+//nobelium
+const byte A7C2[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x40,0x00};
+//phosphorus
+//ytterbium
+const byte A7C3[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x20,0x00};
+//manganese
+//arsenic
+const byte A7C4[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x10,0x00};
+//technetium
+//antimony
+const byte A7C5[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00};
+//rhenium
+//bismuth
+const byte A7C6[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00};
+//bohrium
+//moscovium
+const byte A7C7[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x00};
+//fluorine
+//gadolinium
+const byte A7C8[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x00};
+
+//helium
+//berkelium
+const byte A8C1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
+//oxygen
+//lawrencium
+const byte A8C2[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
+//sulfur
+//lutetium
+const byte A8C3[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x20};
+//iron
+//selenium
+const byte A8C4[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10};
+//ruthenium
+//tellurium
+const byte A8C5[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08};
+//osmium
+//polonium
+const byte A8C6[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04};
+//hassium
+//livermorium
+const byte A8C7[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02};
+//terbium
+const byte A8C8[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01};
+
+/*const byte* elements[] = {A1C1, A1C2, A1C3, A1C4, A1C5, A1C6, A1C7, A1C8,
+                       A2C1, A2C2, A2C3, A2C4, A2C5, A2C6, A2C7, A2C8,
+                       A3C1, A3C2, A3C3, A3C4, A3C5, A3C6, A3C7, A3C8,
+                       A4C1, A4C2, A4C3, A4C4, A4C5, A4C6, A4C7, A4C8,
+                       A5C1, A5C2, A5C3, A5C4, A5C5, A5C6, A5C7, A5C8,
+                       A6C1, A6C2, A6C3, A6C4, A6C5, A6C6, A6C7, A6C8,
+                       A7C1, A7C2, A7C3, A7C4, A7C5, A7C6, A7C7, A7C8,
+                       A8C1, A8C2, A8C3, A8C4, A8C5, A8C6, A8C7, A8C8,
+                       //first array is done
+                       A1C4, A1C5, A1C6, A1C7, A1C8,
+                       A2C1, A2C4, A2C5, A2C6, A2C7, A2C8,
+                       A3C1, A3C4, A3C5, A3C6, A3C7, A3C8,
+                       A4C1, A4C4, A4C5, A4C6, A4C7, A4C8,
+                       A5C1, A5C2, A5C3, A5C4, A5C5, A5C6, A5C7, A5C8,
+                       A6C1, A6C2, A6C3, A6C4, A6C5, A6C6, A6C7, A6C8,
+                       A7C1, A7C2, A7C3, A7C4, A7C5, A7C6, A7C7, A7C8,
+                       A8C1, A8C2, A8C3, A8C4, A8C5, A8C6, A8C7};
+*/
+
+//Series
+//alkali
+const byte alkali_0[] PROGMEM = {0x7e,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//alkalien_earth_metals
+const byte earth_met_0[] PROGMEM = {0x00,0x7e,0x00,0x00,0x00,0x00,0x00,0x00};
+//transition_metals
+const byte transition_0[] PROGMEM = {0x00,0x00,0x18,0x1e,0x1e,0x1e,0x1e,0x1e};
+const byte transition_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x00,0x00,0x00,0x00};
+//halogens
+const byte halogens_1[] PROGMEM = {0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x00};
+//lanthanoid
+const byte lanthanoid_0[] PROGMEM = {0x01,0x01,0x25,0x21,0x21,0x21,0x21,0x21};
+//other_metals
+const byte other_meta_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x3e,0x0e,0x06,0x06};
+//metalloids
+const byte metalloids_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x40,0x30,0x18,0x08};
+//other_nonmetals
+const byte other_non_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte other_non_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x60,0x70};
+//nobel_gases
+const byte nobel_1[] PROGMEM = {0x00,0x80,0x80,0x80,0x80,0x80,0x80,0x80};
+//actinod
+const byte actinod_0[] PROGMEM = {0x00,0x80,0xc2,0xc0,0xc0,0xc0,0xc0,0xc0};
+const byte actinod_1[] PROGMEM = {0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//all_metal
+const byte all_metal_0[] PROGMEM = {0x7f,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+const byte all_metal_1[] PROGMEM = {0x1d,0x1c,0x1c,0x1c,0x3c,0x0c,0x04,0x04};
+//all_non_metal
+const byte all_non_metal_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte all_non_metal_1[] PROGMEM = {0x00,0x00,0x80,0x81,0x81,0xc1,0xe1,0xf0};
+//radioactive
+const byte radioactive_0[] PROGMEM = {0x02,0x82,0xc2,0xc3,0xc2,0xc2,0xca,0xc2};
+const byte radioactive_1[] PROGMEM = {0x03,0x83,0x83,0x02,0x02,0x02,0x02,0x06};
+
+
+//State
+//Solid
+const byte solid_0[] PROGMEM = {0x7d,0xff,0xff,0xfd,0xfd,0xfd,0xfd,0xfd};
+const byte solid_1[] PROGMEM = {0x1d,0x1c,0x1d,0x19,0x7c,0x7c,0x3c,0x3c};
+//Liquid
+const byte liquid_0[] PROGMEM = {0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte liquid_1[] PROGMEM = {0x00,0x00,0x00,0x04,0x01,0x00,0x00,0x00};
+//Gas
+const byte gas_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte gas_1[] PROGMEM = {0x00,0x80,0x80,0x80,0x80,0x81,0xc1,0xc0};
+//Unknown
+const byte unknown_0[] PROGMEM = {0x00,0x00,0x00,0x02,0x02,0x02,0x02,0x02};
+const byte unknown_1[] PROGMEM = {0x02,0x83,0x02,0x02,0x02,0x02,0x02,0x02};
+//all
+const byte all_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+const byte all_1[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+
+//Century
+//Early
+const byte early_0[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte early_1[] PROGMEM = {0x00,0x00,0x1c,0x14,0x00,0x4c,0x3c,0x20};
+//Eighteen
+const byte eighteen_0[] PROGMEM = {0x80,0x68,0x88,0x18,0x00,0x1c,0x10,0x00};
+const byte eighteen_1[] PROGMEM = {0x10,0x14,0x00,0x00,0x00,0x01,0x40,0x48};
+//Nineteen
+const byte nineteen_0[] PROGMEM = {0x7d,0x17,0x37,0x20,0x3d,0x20,0x21,0x0d};
+const byte nineteen_1[] PROGMEM = {0x0c,0x08,0x00,0x89,0xfd,0xb0,0x81,0x94};
+//Twenty
+const byte twenty_0[] PROGMEM = {0x02,0x80,0x40,0xc7,0xc2,0xc3,0xce,0xe2};
+const byte twenty_1[] PROGMEM = {0x02,0x02,0x83,0x02,0x00,0x02,0x00,0x00};
+//TwentyOne
+const byte twentyone_1[] PROGMEM = {0x00,0x81,0x00,0x00,0x02,0x02,0x02,0x00};
+
+//Glucose
+const byte glucose_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte glucose_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//H2O
+const byte h2o_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte h2o_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
+//CO2
+const byte co2_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//Bakingsoda
+const byte bakingsoda_0[] PROGMEM = {0xa0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte bakingsoda_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//NaCl
+const byte nacl_0[] PROGMEM = {0x20,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte nacl_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x00};
+//Methane
+const byte methane_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte methane_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x00};
+//Ammonia
+const byte ammonia_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte ammonia_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x40,0x00};
+//SulfuricAcid
+const byte sulfuricacid_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte sulfuricacid_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x60};
+//CitricAcid
+const byte citricacid_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte citricacid_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//HydrogenPeroxide
+const byte hydrogenperoxide_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte hydrogenperoxide_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
+
+//C2H402 AceticAcid(Vinegar)
+const byte aceticacid_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte aceticacid_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//CaCO3 CalciumCarbonate
+const byte calciumcarbonate_0[] PROGMEM = {0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte calciumcarbonate_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x00,0x40};
+//Fe2O3 IronOxide(Rust)
+const byte ironoxide_0[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte ironoxide_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
+//SiO2 SiliconDioxide(sand)
+const byte silicondioxide_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x20,0x00,0x40};
+//HCl hydrochloricAcid
+const byte hydrochloricacid_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte hydrochloricacid_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x00};
+//LiOH Lithiumhydroxide
+const byte lithiumhydroxide_0[] PROGMEM = {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte lithiumhydroxide_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
+
+
+//block
+//S block
+const byte S_block_0[] PROGMEM = {0xfe,0x7e,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte S_block_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
+//P block
+const byte P_block_1[] PROGMEM = {0x00,0x81,0x81,0x81,0xff,0xff,0xff,0x7e};
+//D block
+const byte D_block_0[] PROGMEM = {0x00,0x00,0x18,0x1e,0x1e,0x1e,0x1e,0x7e};
+const byte D_block_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x00,0x00,0x00,0x00};
+//F block
+const byte F_block_0[] PROGMEM = {0x01,0x81,0xe7,0xe1,0xe1,0xe1,0xe1,0x81};
+const byte F_block_1[] PROGMEM = {0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+//TimeLine
+//-1730
+const byte Up1730_0[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte Up1730_1[] PROGMEM = {0x00,0x00,0x1c,0x14,0x00,0x4c,0x3c,0x20};
+//-1750
+const byte Up1750_0[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte Up1750_1[] PROGMEM = {0x10,0x04,0x1c,0x14,0x00,0x4c,0x3c,0x20};
+//-1770
+const byte Up1770_0[] PROGMEM = {0x80,0x20,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte Up1770_1[] PROGMEM = {0x10,0x14,0x1c,0x14,0x00,0x4c,0x3c,0x20};
+//-1790
+const byte Up1790_0[] PROGMEM = {0x80,0x28,0x80,0x08,0x00,0x0c,0x10,0x10};
+const byte Up1790_1[] PROGMEM = {0x10,0x14,0x1c,0x14,0x00,0x4d,0x7c,0x68};
+//-1810
+const byte Up1810_0[] PROGMEM = {0xb1,0x7c,0x88,0x18,0x1c,0x1c,0x10,0x14};
+const byte Up1810_1[] PROGMEM = {0x1c,0x1c,0x1c,0x14,0x40,0x4d,0x7c,0x68};
+//-1830
+const byte Up1830_0[] PROGMEM = {0xf1,0x7c,0x88,0x18,0x1c,0x1c,0x10,0x14};
+const byte Up1830_1[] PROGMEM = {0x1d,0x1c,0x1c,0x1d,0x61,0x6d,0x7c,0x78};
+//-1850
+const byte Up1850_0[] PROGMEM = {0xf1,0x7c,0x8c,0x18,0x3c,0x1c,0x10,0x1d};
+const byte Up1850_1[] PROGMEM = {0x1d,0x1c,0x1c,0x1d,0x61,0x6d,0x7c,0x78};
+//-1870
+const byte Up1870_0[] PROGMEM = {0xfd,0x7c,0x8c,0x18,0x3c,0x1c,0x10,0x1d};
+const byte Up1870_1[] PROGMEM = {0x1d,0x1c,0x1c,0x1d,0x6d,0x6d,0x7c,0x78};
+//-1890
+const byte Up1890_0[] PROGMEM = {0xfd,0x7d,0xbd,0x38,0x3d,0x3c,0x31,0x1d};
+const byte Up1890_1[] PROGMEM = {0x1d,0x1c,0x1c,0x1d,0x7d,0x7d,0x7d,0x78};
+//-1910
+const byte Up1910_0[] PROGMEM = {0xfd,0x7f,0xbf,0x38,0x3d,0x3d,0x31,0x3d};
+const byte Up1910_1[] PROGMEM = {0x1d,0x1c,0x9c,0x9d,0xfd,0xfd,0xfd,0xfc};
+//-1930
+const byte Up1930_0[] PROGMEM = {0xfd,0xff,0xbf,0x3c,0x3d,0x3d,0x35,0x3d};
+const byte Up1930_1[] PROGMEM = {0x1d,0x1c,0x9c,0x9d,0xfd,0xfd,0xfd,0xfc};
+//-1950
+const byte Up1950_0[] PROGMEM = {0xff,0xff,0xff,0xbd,0xbd,0xbd,0xbd,0xbd};
+const byte Up1950_1[] PROGMEM = {0x1d,0x1c,0x9d,0x9d,0xfd,0xfd,0xfd,0xfc};
+//-1970
+const byte Up1970_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xfd,0xfd,0xfd};
+const byte Up1970_1[] PROGMEM = {0x1d,0x1c,0x9d,0x9d,0xfd,0xfd,0xfd,0xfc};
+//-1990
+const byte Up1990_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+const byte Up1990_1[] PROGMEM = {0x1f,0x1c,0x9d,0x9d,0xfd,0xfd,0xfd,0xfc};
+//-2010
+const byte Up2010_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+const byte Up2010_1[] PROGMEM = {0x1f,0x9f,0x9f,0x9f,0xff,0xff,0xff,0xfe};
+
+//composotion
+//human_body
+const byte human_0[] PROGMEM = {0xb0,0x30,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte human_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x41,0x60,0x60};
+//plant
+const byte plant_0[] PROGMEM = {0x90,0x30,0x00,0x00,0x00,0x08,0x10,0x10};
+const byte plant_1[] PROGMEM = {0x00,0x10,0x10,0x10,0x40,0x41,0x60,0x60};
+//solar
+const byte solar_0[] PROGMEM = {0x80,0x20,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte solar_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x60,0xc0,0xe0};
+//atm
+const byte atm_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte atm_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x40,0x40,0x60};
+//crust
+const byte crust_0[] PROGMEM = {0x30,0x30,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte crust_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x20,0x20,0x00,0x40};
+//ocean
+const byte ocean_0[] PROGMEM = {0x30,0x30,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte ocean_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x60};
+//univers
+const byte univers_0[] PROGMEM = {0x80,0x20,0x00,0x00,0x00,0x00,0x00,0x10};
+const byte univers_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x60,0xc0,0xe0};
+
+//ColumnDance
+//column1
+const byte columnE1_0[] PROGMEM = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE2_0[] PROGMEM = {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE3_0[] PROGMEM = {0xe0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE4_0[] PROGMEM = {0xf0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE5_0[] PROGMEM = {0xf8,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE6_0[] PROGMEM = {0xfc,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE7_0[] PROGMEM = {0xfe,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//column2
+const byte columnE8_0[] PROGMEM = {0xfe,0x40,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE9_0[] PROGMEM = {0xfe,0x60,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE10_0[] PROGMEM = {0xfe,0x70,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE11_0[] PROGMEM = {0xfe,0x78,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE12_0[] PROGMEM = {0xfe,0x7c,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE13_0[] PROGMEM = {0xfe,0x7e,0x00,0x00,0x00,0x00,0x00,0x00};
+//column3
+const byte columnE14_0[] PROGMEM = {0xfe,0x7e,0x10,0x00,0x00,0x00,0x00,0x00};
+const byte columnE15_0[] PROGMEM = {0xfe,0x7e,0x18,0x00,0x00,0x00,0x00,0x00};
+const byte columnE16_0[] PROGMEM = {0xfe,0x7e,0x1c,0x00,0x00,0x00,0x00,0x00};
+const byte columnE17_0[] PROGMEM = {0xfe,0x7e,0x1e,0x00,0x00,0x00,0x00,0x00};
+//column4
+const byte columnE18_0[] PROGMEM = {0xfe,0x7e,0x1e,0x10,0x00,0x00,0x00,0x00};
+const byte columnE19_0[] PROGMEM = {0xfe,0x7e,0x1e,0x18,0x00,0x00,0x00,0x00};
+const byte columnE20_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1c,0x00,0x00,0x00,0x00};
+const byte columnE21_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x00,0x00,0x00,0x00};
+//column5
+const byte columnE22_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x10,0x00,0x00,0x00};
+const byte columnE23_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x18,0x00,0x00,0x00};
+const byte columnE24_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1c,0x00,0x00,0x00};
+const byte columnE25_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x00,0x00,0x00};
+//column6
+const byte columnE26_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x10,0x00,0x00};
+const byte columnE27_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x18,0x00,0x00};
+const byte columnE28_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1c,0x00,0x00};
+const byte columnE29_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x00,0x00};
+//column7
+const byte columnE30_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x10,0x00};
+const byte columnE31_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x18,0x00};
+const byte columnE32_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1c,0x00};
+const byte columnE33_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x00};
+//column8
+const byte columnE34_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x10};
+const byte columnE35_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x18};
+const byte columnE36_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x1c};
+const byte columnE37_0[] PROGMEM = {0xfe,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x1e};
+//column9
+const byte columnE38_1[] PROGMEM = {0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE39_1[] PROGMEM = {0x18,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE40_1[] PROGMEM = {0x1c,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE41_1[] PROGMEM = {0x1e,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//column10
+const byte columnE42_1[] PROGMEM = {0x1e,0x10,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE43_1[] PROGMEM = {0x1e,0x18,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE44_1[] PROGMEM = {0x1e,0x1c,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte columnE45_1[] PROGMEM = {0x1e,0x1e,0x00,0x00,0x00,0x00,0x00,0x00};
+//column11
+const byte columnE46_1[] PROGMEM = {0x1e,0x1e,0x10,0x00,0x00,0x00,0x00,0x00};
+const byte columnE47_1[] PROGMEM = {0x1e,0x1e,0x18,0x00,0x00,0x00,0x00,0x00};
+const byte columnE48_1[] PROGMEM = {0x1e,0x1e,0x1c,0x00,0x00,0x00,0x00,0x00};
+const byte columnE49_1[] PROGMEM = {0x1e,0x1e,0x1e,0x00,0x00,0x00,0x00,0x00};
+//column12
+const byte columnE50_1[] PROGMEM = {0x1e,0x1e,0x1e,0x10,0x00,0x00,0x00,0x00};
+const byte columnE51_1[] PROGMEM = {0x1e,0x1e,0x1e,0x18,0x00,0x00,0x00,0x00};
+const byte columnE52_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1c,0x00,0x00,0x00,0x00};
+const byte columnE53_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x00,0x00,0x00,0x00};
+//column13
+const byte columnE54_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x40,0x00,0x00,0x00};
+const byte columnE55_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x60,0x00,0x00,0x00};
+const byte columnE56_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x70,0x00,0x00,0x00};
+const byte columnE57_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x78,0x00,0x00,0x00};
+const byte columnE58_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7c,0x00,0x00,0x00};
+const byte columnE59_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x00,0x00,0x00};
+//column14
+const byte columnE60_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x40,0x00,0x00};
+const byte columnE61_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x60,0x00,0x00};
+const byte columnE62_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x70,0x00,0x00};
+const byte columnE63_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x78,0x00,0x00};
+const byte columnE64_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7c,0x00,0x00};
+const byte columnE65_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x00,0x00};
+//column15
+const byte columnE66_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x40,0x00};
+const byte columnE67_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x60,0x00};
+const byte columnE68_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x70,0x00};
+const byte columnE69_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x78,0x00};
+const byte columnE70_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7c,0x00};
+const byte columnE71_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x00};
+//column16
+const byte columnE72_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x40};
+const byte columnE73_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x60};
+const byte columnE74_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x70};
+const byte columnE75_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x78};
+const byte columnE76_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x7c};
+const byte columnE77_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7e,0x7e};
+//column17
+const byte columnE78_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7e,0x7f,0x7e};
+const byte columnE79_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7e,0x7f,0x7f,0x7e};
+const byte columnE80_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1e,0x7f,0x7f,0x7f,0x7e};
+const byte columnE81_1[] PROGMEM = {0x1e,0x1e,0x1e,0x1f,0x7f,0x7f,0x7f,0x7e};
+const byte columnE82_1[] PROGMEM = {0x1e,0x1e,0x1f,0x1f,0x7f,0x7f,0x7f,0x7e};
+const byte columnE83_1[] PROGMEM = {0x1e,0x1f,0x1f,0x1f,0x7f,0x7f,0x7f,0x7e};
+//column18
+const byte columnE84_1[] PROGMEM = {0x1e,0x1f,0x1f,0x1f,0x7f,0x7f,0x7f,0xfe};
+const byte columnE85_1[] PROGMEM = {0x1e,0x1f,0x1f,0x1f,0x7f,0x7f,0xff,0xfe};
+const byte columnE86_1[] PROGMEM = {0x1e,0x1f,0x1f,0x1f,0x7f,0xff,0xff,0xfe};
+const byte columnE87_1[] PROGMEM = {0x1e,0x1f,0x1f,0x1f,0xff,0xff,0xff,0xfe};
+const byte columnE88_1[] PROGMEM = {0x1e,0x1f,0x1f,0x9f,0xff,0xff,0xff,0xfe};
+const byte columnE89_1[] PROGMEM = {0x1e,0x1f,0x9f,0x9f,0xff,0xff,0xff,0xfe};
+const byte columnE90_1[] PROGMEM = {0x1e,0x9f,0x9f,0x9f,0xff,0xff,0xff,0xfe};
+//la
+const byte columnE91_0[] PROGMEM = {0xff,0x7e,0x1e,0x1e,0x1e,0x1e,0x1e,0x1e};
+const byte columnE92_0[] PROGMEM = {0xff,0x7f,0x1e,0x1e,0x1e,0x1e,0x1e,0x1e};
+const byte columnE93_0[] PROGMEM = {0xff,0x7f,0x1f,0x1e,0x1e,0x1e,0x1e,0x1e};
+const byte columnE94_0[] PROGMEM = {0xff,0x7f,0x1f,0x1f,0x1e,0x1e,0x1e,0x1e};
+const byte columnE95_0[] PROGMEM = {0xff,0x7f,0x1f,0x1f,0x1f,0x1e,0x1e,0x1e};
+const byte columnE96_0[] PROGMEM = {0xff,0x7f,0x1f,0x1f,0x1f,0x1f,0x1e,0x1e};
+const byte columnE97_0[] PROGMEM = {0xff,0x7f,0x1f,0x1f,0x1f,0x1f,0x1f,0x1e};
+const byte columnE98_0[] PROGMEM = {0xff,0x7f,0x1f,0x1f,0x1f,0x1f,0x1f,0x1f};
+const byte columnE99_0[] PROGMEM = {0xff,0x7f,0x3f,0x1f,0x1f,0x1f,0x1f,0x1f};
+const byte columnE100_0[] PROGMEM = {0xff,0x7f,0x3f,0x3f,0x1f,0x1f,0x1f,0x1f};
+const byte columnE101_0[] PROGMEM = {0xff,0x7f,0x3f,0x3f,0x3f,0x1f,0x1f,0x1f};
+const byte columnE102_0[] PROGMEM = {0xff,0x7f,0x3f,0x3f,0x3f,0x3f,0x1f,0x1f};
+const byte columnE103_0[] PROGMEM = {0xff,0x7f,0x3f,0x3f,0x3f,0x3f,0x3f,0x1f};
+const byte columnE104_0[] PROGMEM = {0xff,0x7f,0x3f,0x3f,0x3f,0x3f,0x3f,0x3f};
+//ac
+const byte columnE105_1[] PROGMEM = {0x1f,0x9f,0x9f,0x9f,0xff,0xff,0xff,0xfe};
+const byte columnE106_0[] PROGMEM = {0xff,0xff,0x3f,0x3f,0x3f,0x3f,0x3f,0x3f};
+const byte columnE107_0[] PROGMEM = {0xff,0xff,0xbf,0x3f,0x3f,0x3f,0x3f,0x3f};
+const byte columnE108_0[] PROGMEM = {0xff,0xff,0xbf,0xbf,0x3f,0x3f,0x3f,0x3f};
+const byte columnE109_0[] PROGMEM = {0xff,0xff,0xbf,0xbf,0xbf,0x3f,0x3f,0x3f};
+const byte columnE110_0[] PROGMEM = {0xff,0xff,0xbf,0xbf,0xbf,0xbf,0x3f,0x3f};
+const byte columnE111_0[] PROGMEM = {0xff,0xff,0xbf,0xbf,0xbf,0xbf,0xbf,0x3f};
+const byte columnE112_0[] PROGMEM = {0xff,0xff,0xbf,0xbf,0xbf,0xbf,0xbf,0xbf};
+const byte columnE113_0[] PROGMEM = {0xff,0xff,0xff,0xbf,0xbf,0xbf,0xbf,0xbf};
+const byte columnE114_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xbf,0xbf,0xbf,0xbf};
+const byte columnE115_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xbf,0xbf,0xbf};
+const byte columnE116_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xbf,0xbf};
+const byte columnE117_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xbf};
+const byte columnE118_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+
+void clearME()
+{
+  lc_0.clearDisplay(0);
+  lc_0.clearDisplay(1);
+}
+
+void setup() {
+  lc_0.shutdown(0, false); // activating the first matrix
+  lc_0.shutdown(1, false); // activating the second matrix
+  lc_0.setIntensity(0, 6); // seting the brightness of the first matrix
+  // the maximum brightness constroled with software is 15 ofcourse it also depends on the resistors
+  // the other specific thing about this project on brightness is that it will crush if you make the brightness level to high I think it is because the resistors I used
+  lc_0.setIntensity(1, 6); // seting the brightness of the second matrix
+  lc_0.clearDisplay(0); // clearing display for the first matrix
+  lc_0.clearDisplay(1); // clearing display for second matrix
+  Serial.begin(9600);
+}
+
+void loop() {
+  String state = "";//to store the command
+  state.reserve(15);
+  if (Serial.available() > 0)
+  {
+    state = Serial.readString();
+    /*
+    if (Incoming[0]== 'T')
+    {
+      int TF = atoi(Incoming);
+      Serial.println("Temp: " + TF); 
+    }
+    else if(Incoming[0] == 'D')
+    {
+      int DF = atoi(Incoming);
+      Serial.println("Discovry: " + DF);
+      displayDiscovery(DF);
+    }
+    else
+    {
+    Serial.println("Command: " + String(Incoming));
+    state.toCharArray(Incoming, 15);
+    checkCommands(Incoming);
+    }
+    */
+//    Serial.println("Command: " + String(Incoming));
+    state.toCharArray(Incoming, 15);
+    checkCommands(Incoming);
+  }
+}
+
+/*void displayDiscovery(int year){
+  clearME();
+  for (int i = 0; i<118; i++){
+    if(pgm_read_word_near(discovered + i) <= year){
+      if (i<=64){
+        printByte(elements[i]);
+        delay(wait);
+        }
+       else if (i>65){
+        printByte_1(elements[i]);
+        delay(wait);
+        }}
+    }
+  }
+*/
+
+//when command is recieved this function is called.
+//The function compares its known commands to the one recieved. If there is a match
+void checkCommands(char inStr[]){
+  Serial.print(F("Check commands: "));
+  //Serial.println(inStr);
+  //eureka moment I found why the if statments are taking different amount of RAM
+  //it is based on the length of the compared command which is sent from the mobile app over bluetooth
+  //so why not using the dumb symbol :)
+  //Series
+  if(!strcmp(inStr, "Alkali")){clearME();printByte(alkali_0);}
+  if(!strcmp(inStr, "AlkaliEart")){clearME();printByte(earth_met_0);}
+  if(!strcmp(inStr, "Transition")){clearME();printByte(transition_0);delay(wait);printByte_1(transition_1);}
+  if(!strcmp(inStr, "Halogen")){clearME();printByte_1(halogens_1);}
+  if(!strcmp(inStr, "Lanthanoid")){clearME();printByte(lanthanoid_0);}
+  if(!strcmp(inStr, "OtherMetal")){clearME();printByte_1(other_meta_1);}
+  if(!strcmp(inStr, "Metalloid")){clearME();printByte_1(metalloids_1);}
+  if(!strcmp(inStr, "OtherNon")){clearME();printByte(other_non_0);delay(wait);printByte_1(other_non_1);}
+  if(!strcmp(inStr, "NobleGas")){clearME();printByte_1(nobel_1);}
+  if(!strcmp(inStr, "Actinod")){clearME();printByte(actinod_0);delay(wait);printByte_1(actinod_1);}
+  if(!strcmp(inStr, "AllMetal")){clearME();printByte(all_metal_0);delay(wait);printByte_1(all_metal_1);}
+  if(!strcmp(inStr, "AllNon")){clearME();printByte(all_non_metal_0);delay(wait);printByte_1(all_non_metal_1);}
+  if(!strcmp(inStr, "Radioactive")){clearME();printByte(radioactive_0);delay(wait);printByte_1(radioactive_0);}
+ 
+  //State
+  if(!strcmp(inStr, "All")){clearME();printByte(all_0);delay(wait);printByte_1(all_1);}
+  if(!strcmp(inStr, "Solid")){clearME();printByte(solid_0);delay(wait);printByte_1(solid_1);}
+  if(!strcmp(inStr, "Liquid")){clearME();printByte(liquid_0);delay(wait);printByte_1(liquid_1);}
+  if(!strcmp(inStr, "Gas")){clearME();printByte(gas_0);delay(wait);printByte_1(gas_1);}
+  if(!strcmp(inStr, "Unknown")){clearME();printByte(unknown_0);delay(wait);printByte_1(unknown_1);}
+  
+  //Elements
+  if(!strcmp(inStr, "H")){clearME();printByte(A1C1);}
+  if(!strcmp(inStr, "Li")){clearME();printByte(A1C2);}
+  if(!strcmp(inStr, "Na")){clearME();printByte(A1C3);}
+  if(!strcmp(inStr, "K")){clearME();printByte(A1C4);}
+  if(!strcmp(inStr, "Rb")){clearME();printByte(A1C5);}
+  if(!strcmp(inStr, "Cs")){clearME();printByte(A1C6);}
+  if(!strcmp(inStr, "Fr")){clearME();printByte(A1C7);}
+     
+  if(!strcmp(inStr, "Be")){clearME();printByte(A2C2);}
+  if(!strcmp(inStr, "Mg")){clearME();printByte(A2C3);}
+  if(!strcmp(inStr, "Ca")){clearME();printByte(A2C4);}
+  if(!strcmp(inStr, "Sr")){clearME();printByte(A2C5);}
+  if(!strcmp(inStr, "Ba")){clearME();printByte(A2C6);}
+  if(!strcmp(inStr, "Ra")){clearME();printByte(A2C7);}
+  
+  if(!strcmp(inStr, "Sc")){clearME();printByte(A3C4);}
+  if(!strcmp(inStr, "Y")){clearME();printByte(A3C5);}
+  if(!strcmp(inStr, "La")){clearME();printByte(A3C6);}
+  if(!strcmp(inStr, "Ac")){clearME();printByte(A3C7);}
+  
+  if(!strcmp(inStr, "Ti")){clearME();printByte(A4C4);}
+  if(!strcmp(inStr, "Zr")){clearME();printByte(A4C5);}
+  if(!strcmp(inStr, "Hf")){clearME();printByte(A4C6);}
+  if(!strcmp(inStr, "Rf")){clearME();printByte(A4C7);}
+  
+  if(!strcmp(inStr, "V")){clearME();printByte(A5C4);}
+  if(!strcmp(inStr, "Nb")){clearME();printByte(A5C5);}
+  if(!strcmp(inStr, "Ta")){clearME();printByte(A5C6);}
+  if(!strcmp(inStr, "Db")){clearME();printByte(A5C7);}
+  
+  if(!strcmp(inStr, "Cr")){clearME();printByte(A6C4);}
+  if(!strcmp(inStr, "Mo")){clearME();printByte(A6C5);}
+  if(!strcmp(inStr, "W")){clearME();printByte(A6C6);}
+  if(!strcmp(inStr, "Sg")){clearME();printByte(A6C7);}
+  
+  if(!strcmp(inStr, "Mn")){clearME();printByte(A7C4);}
+  if(!strcmp(inStr, "Tc")){clearME();printByte(A7C5);}
+  if(!strcmp(inStr, "Re")){clearME();printByte(A7C6);}
+  if(!strcmp(inStr, "Bh")){clearME();printByte(A7C7);}
+  
+  if(!strcmp(inStr, "Fe")){clearME();printByte(A8C4);}
+  if(!strcmp(inStr, "Ru")){clearME();printByte(A8C5);}
+  if(!strcmp(inStr, "Os")){clearME();printByte(A8C6);}
+  if(!strcmp(inStr, "Hs")){clearME();printByte(A8C7);}
+  
+  if(!strcmp(inStr, "Co")){clearME();printByte_1(A1C4);}
+  if(!strcmp(inStr, "Rh")){clearME();printByte_1(A1C5);}
+  if(!strcmp(inStr, "Ir")){clearME();printByte_1(A1C6);}
+  if(!strcmp(inStr, "Mt")){clearME();printByte_1(A1C7);}
+  
+  if(!strcmp(inStr, "Ni")){clearME();printByte_1(A2C4);}
+  if(!strcmp(inStr, "Pd")){clearME();printByte_1(A2C5);}
+  if(!strcmp(inStr, "Pt")){clearME();printByte_1(A2C6);}
+  if(!strcmp(inStr, "Ds")){clearME();printByte_1(A2C7);}
+  
+  if(!strcmp(inStr, "Cu")){clearME();printByte_1(A3C4);}
+  if(!strcmp(inStr, "Ag")){clearME();printByte_1(A3C5);}
+  if(!strcmp(inStr, "Au")){clearME();printByte_1(A3C6);}
+  if(!strcmp(inStr, "Rg")){clearME();printByte_1(A3C7);}
+  
+  if(!strcmp(inStr, "Zn")){clearME();printByte_1(A4C4);}
+  if(!strcmp(inStr, "Cd")){clearME();printByte_1(A4C5);}
+  if(!strcmp(inStr, "Hg")){clearME();printByte_1(A4C6);}
+  if(!strcmp(inStr, "Cn")){clearME();printByte_1(A4C7);}
+  
+  if(!strcmp(inStr, "B")){clearME();printByte_1(A5C2);}
+  if(!strcmp(inStr, "Al")){clearME();printByte_1(A5C3);}
+  if(!strcmp(inStr, "Ga")){clearME();printByte_1(A5C4);}
+  if(!strcmp(inStr, "In")){clearME();printByte_1(A5C5);}
+  if(!strcmp(inStr, "Tl")){clearME();printByte_1(A5C6);}
+  if(!strcmp(inStr, "Nh")){clearME();printByte_1(A5C7);}
+  
+  if(!strcmp(inStr, "C")){clearME();printByte_1(A6C2);}
+  if(!strcmp(inStr, "Si")){clearME();printByte_1(A6C3);}
+  if(!strcmp(inStr, "Ge")){clearME();printByte_1(A6C4);}
+  if(!strcmp(inStr, "Sn")){clearME();printByte_1(A6C5);}
+  if(!strcmp(inStr, "Pb")){clearME();printByte_1(A6C6);}
+  if(!strcmp(inStr, "Fl")){clearME();printByte_1(A6C7);}
+  
+  if(!strcmp(inStr, "N")){clearME();printByte_1(A7C2);}
+  if(!strcmp(inStr, "P")){clearME();printByte_1(A7C3);}
+  if(!strcmp(inStr, "As")){clearME();printByte_1(A7C4);}
+  if(!strcmp(inStr, "Sb")){clearME();printByte_1(A7C5);}
+  if(!strcmp(inStr, "Bi")){clearME();printByte_1(A7C6);}
+  if(!strcmp(inStr, "Mc")){clearME();printByte_1(A7C7);}
+
+  if(!strcmp(inStr, "O")){clearME();printByte_1(A8C2);}
+  if(!strcmp(inStr, "S")){clearME();printByte_1(A8C3);}
+  if(!strcmp(inStr, "Se")){clearME();printByte_1(A8C4);}
+  if(!strcmp(inStr, "Te")){clearME();printByte_1(A8C5);}
+  if(!strcmp(inStr, "Po")){clearME();printByte_1(A8C6);}
+  if(!strcmp(inStr, "Lv")){clearME();printByte_1(A8C7);}
+  
+  if(!strcmp(inStr, "F")){clearME();printByte_1(A7C8);}
+  if(!strcmp(inStr, "Cl")){clearME();printByte_1(A6C8);}
+  if(!strcmp(inStr, "Br")){clearME();printByte_1(A5C8);}
+  if(!strcmp(inStr, "I")){clearME();printByte_1(A4C8);}
+  if(!strcmp(inStr, "At")){clearME();printByte_1(A3C8);}
+  if(!strcmp(inStr, "Ts")){clearME();printByte_1(A2C8);}
+
+  if(!strcmp(inStr, "He")){clearME();printByte_1(A8C1);}
+  if(!strcmp(inStr, "Ne")){clearME();printByte_1(A7C1);}
+  if(!strcmp(inStr, "Ar")){clearME();printByte_1(A6C1);}
+  if(!strcmp(inStr, "Kr")){clearME();printByte_1(A5C1);}
+  if(!strcmp(inStr, "Xe")){clearME();printByte_1(A4C1);}
+  if(!strcmp(inStr, "Rn")){clearME();printByte_1(A3C1);}
+  if(!strcmp(inStr, "Og")){clearME();printByte_1(A2C1);}
+
+  if(!strcmp(inStr, "Ce")){clearME();printByte(A1C8);}
+  if(!strcmp(inStr, "Pr")){clearME();printByte(A2C8);}
+  if(!strcmp(inStr, "Nd")){clearME();printByte(A3C8);}
+  if(!strcmp(inStr, "Pm")){clearME();printByte(A4C8);}
+  if(!strcmp(inStr, "Sm")){clearME();printByte(A5C8);}
+  if(!strcmp(inStr, "Eu")){clearME();printByte(A6C8);}
+  if(!strcmp(inStr, "Gd")){clearME();printByte(A7C8);}
+  if(!strcmp(inStr, "Tb")){clearME();printByte(A8C8);}
+  if(!strcmp(inStr, "Dy")){clearME();printByte(A3C3);}
+  if(!strcmp(inStr, "Ho")){clearME();printByte(A4C3);}
+  if(!strcmp(inStr, "Er")){clearME();printByte(A5C3);}
+  if(!strcmp(inStr, "Tm")){clearME();printByte(A6C3);}
+  if(!strcmp(inStr, "Yb")){clearME();printByte(A7C3);}
+  if(!strcmp(inStr, "Lu")){clearME();printByte(A8C3);}
+
+  if(!strcmp(inStr, "Th")){clearME();printByte_1(A1C8);}
+  if(!strcmp(inStr, "Pa")){clearME();printByte(A2C1);}
+  if(!strcmp(inStr, "U")){clearME();printByte(A3C1);}
+  if(!strcmp(inStr, "Np")){clearME();printByte(A4C1);}
+  if(!strcmp(inStr, "Pu")){clearME();printByte(A5C1);}
+  if(!strcmp(inStr, "Am")){clearME();printByte(A6C1);}
+  if(!strcmp(inStr, "Cm")){clearME();printByte(A7C1);}
+  if(!strcmp(inStr, "Bk")){clearME();printByte(A8C1);}
+  if(!strcmp(inStr, "Cf")){clearME();printByte(A3C2);}
+  if(!strcmp(inStr, "Es")){clearME();printByte(A4C2);}
+  if(!strcmp(inStr, "Fm")){clearME();printByte(A5C2);}
+  if(!strcmp(inStr, "Md")){clearME();printByte(A6C2);}
+  if(!strcmp(inStr, "No")){clearME();printByte(A7C2);}
+  if(!strcmp(inStr, "Lr")){clearME();printByte(A8C2);}
+
+  //Century
+  if(!strcmp(inStr, "Early")){clearME();printByte(early_0);printByte_1(early_1);}
+  if(!strcmp(inStr, "Eighteen")){clearME();printByte(eighteen_0);printByte_1(eighteen_1);}
+  if(!strcmp(inStr, "Nineteen")){clearME();printByte(nineteen_0);printByte_1(nineteen_1);}
+  if(!strcmp(inStr, "Twenty")){clearME();printByte(twenty_0);printByte_1(twenty_1);}
+  if(!strcmp(inStr, "Twentyone")){clearME();printByte_1(twentyone_1);}
+
+ //compositions
+ //human
+ if(!strcmp(inStr, "human")){clearME();printByte(human_0);printByte_1(human_1);}
+ if(!strcmp(inStr, "plant")){clearME();printByte(plant_0);printByte_1(plant_1);}
+ if(!strcmp(inStr, "solar")){clearME();printByte(solar_0);printByte_1(solar_1);}
+ if(!strcmp(inStr, "atm")){clearME();printByte(atm_0);printByte_1(atm_1);}
+ if(!strcmp(inStr, "crust")){clearME();printByte(crust_0);printByte_1(crust_1);}
+ if(!strcmp(inStr, "ocean")){clearME();printByte(ocean_0);printByte_1(ocean_1);}
+ if(!strcmp(inStr, "universe")){clearME();printByte(univers_0);printByte_1(univers_1);}
+ 
+ //compounds
+ //C6H12O6 glucose
+ if(!strcmp(inStr, "C6H1206")){clearME();printByte(glucose_0);printByte_1(glucose_1);}
+ //Water
+ if(!strcmp(inStr, "H20")){clearME();printByte(h2o_0);printByte_1(h2o_1);}
+ //CO2
+ if(!strcmp(inStr, "CO2")){clearME();printByte_1(co2_1);}
+ //NaHC03 BakingSoda
+ if(!strcmp(inStr, "NaHCO3")){clearME();printByte(bakingsoda_0);printByte_1(bakingsoda_1);}
+ //NaCl
+ if(!strcmp(inStr, "NaCl")){clearME();printByte(nacl_0);printByte_1(nacl_1);}
+ //CH4 Methane
+ if(!strcmp(inStr, "CH4")){clearME();printByte(methane_0);printByte_1(methane_1);}
+ //NH3 Ammonia
+ if(!strcmp(inStr, "NH3")){clearME();printByte(ammonia_0);printByte_1(ammonia_1);}
+ //H2SO4 Sulfuric Acid
+ if(!strcmp(inStr, "H2SO4")){clearME();printByte(sulfuricacid_0);printByte_1(sulfuricacid_1);}
+ //C6H8O7 CitricAcid
+ if(!strcmp(inStr, "C6H8O7")){clearME();printByte(citricacid_0);printByte_1(citricacid_1);}
+ //H2O2 Hydrogenperoxide
+ if(!strcmp(inStr, "H202")){clearME();printByte(hydrogenperoxide_0);printByte_1(hydrogenperoxide_1);}
+ //C2H402 AceticAcid(Vinegar)
+ if(!strcmp(inStr, "C2H402")){clearME();printByte(aceticacid_0);printByte_1(aceticacid_1);}
+ //CaCO3 CalciumCarbonate(eggshell) 
+ if(!strcmp(inStr, "CaCO3")){clearME();printByte(calciumcarbonate_0);printByte_1(calciumcarbonate_1);}
+ //Fe2O3 IronOxide(Rust)
+ if(!strcmp(inStr, "Fe2O3")){clearME();printByte(ironoxide_0);printByte_1(ironoxide_1);}
+ //SiO2 SiliconDioxide(sand) 
+ if(!strcmp(inStr, "SiO2")){clearME();printByte_1(silicondioxide_1);}
+ //HCl HydrochloricAcid
+ if(!strcmp(inStr, "HCl")){clearME();printByte(hydrochloricacid_0);printByte_1(hydrochloricacid_1);}
+ //LiOH LithiumHydroxide
+ if(!strcmp(inStr, "LiOH")){clearME();printByte(lithiumhydroxide_0);printByte_1(lithiumhydroxide_1);}
+ 
+ //block
+ //S_block
+ if(!strcmp(inStr, "S-")){clearME();printByte(S_block_0);printByte_1(S_block_1);}
+ //P_block
+ if(!strcmp(inStr, "P-")){clearME();printByte_1(P_block_1);}
+ //D_block
+ if(!strcmp(inStr, "D-")){clearME();printByte(D_block_0);printByte_1(D_block_1);}
+ //F_block
+ if(!strcmp(inStr, "F-")){clearME();printByte(F_block_0);printByte_1(F_block_1);}
+ 
+ //dance
+ //historydance
+ if(!strcmp(inStr, "Timeline")){
+  clearME();
+  //-1730
+  printByte(Up1730_0);printByte_1(Up1730_1);delay(2000);
+  //-1750
+  printByte(Up1750_0);printByte_1(Up1750_1);delay(2000);
+  //-1770
+  printByte(Up1770_0);printByte_1(Up1770_1);delay(2000);
+  //-1790
+  printByte(Up1790_0);printByte_1(Up1790_1);delay(2000);
+  //-1810
+  printByte(Up1810_0);printByte_1(Up1810_1);delay(2000);
+  //-1830
+  printByte(Up1830_0);printByte_1(Up1830_1);delay(2000);
+  //-1850
+  printByte(Up1850_0);printByte_1(Up1850_1);delay(2000);
+  //-1870
+  printByte(Up1870_0);printByte_1(Up1870_1);delay(2000);
+  //-1890
+  printByte(Up1890_0);printByte_1(Up1890_1);delay(2000);
+  //-1910
+  printByte(Up1910_0);printByte_1(Up1910_1);delay(2000);
+  //-1930
+  printByte(Up1930_0);printByte_1(Up1930_1);delay(2000);
+  //-1950
+  printByte(Up1950_0);printByte_1(Up1950_1);delay(2000);
+  //-1970
+  printByte(Up1970_0);printByte_1(Up1970_1);delay(2000);
+  //-1990
+  printByte(Up1990_0);printByte_1(Up1990_1);delay(2000);
+  //-2010
+  printByte(Up2010_0);printByte_1(Up2010_1);delay(5000);
+ }
+
+ //columnDance
+ if(!strcmp(inStr, "columndance")){clearME();
+  printByte(columnE1_0);delay(500);printByte(columnE2_0);delay(500);printByte(columnE3_0);delay(500);printByte(columnE4_0);delay(500);printByte(columnE5_0);delay(500);printByte(columnE6_0);delay(500);printByte(columnE7_0);delay(500);
+  printByte(columnE8_0);delay(500);printByte(columnE9_0);delay(500);printByte(columnE10_0);delay(500);printByte(columnE11_0);delay(500);printByte(columnE12_0);delay(500);printByte(columnE13_0);delay(500);
+  printByte(columnE14_0);delay(500);printByte(columnE15_0);delay(500);printByte(columnE16_0);delay(500);printByte(columnE17_0);delay(500);
+  printByte(columnE18_0);delay(500);printByte(columnE19_0);delay(500);printByte(columnE20_0);delay(500);printByte(columnE21_0);delay(500);
+  printByte(columnE22_0);delay(500);printByte(columnE23_0);delay(500);printByte(columnE24_0);delay(500);printByte(columnE25_0);delay(500);
+  printByte(columnE26_0);delay(500);printByte(columnE27_0);delay(500);printByte(columnE28_0);delay(500);printByte(columnE29_0);delay(500);
+  printByte(columnE30_0);delay(500);printByte(columnE31_0);delay(500);printByte(columnE32_0);delay(500);printByte(columnE33_0);delay(500);
+  printByte(columnE34_0);delay(500);printByte(columnE35_0);delay(500);printByte(columnE36_0);delay(500);printByte(columnE37_0);delay(500);
+  printByte_1(columnE38_1);delay(500);printByte_1(columnE39_1);delay(500);printByte_1(columnE40_1);delay(500);printByte_1(columnE41_1);delay(500);
+  printByte_1(columnE42_1);delay(500);printByte_1(columnE43_1);delay(500);printByte_1(columnE44_1);delay(500);printByte_1(columnE45_1);delay(500);
+  printByte_1(columnE46_1);delay(500);printByte_1(columnE47_1);delay(500);printByte_1(columnE48_1);delay(500);printByte_1(columnE49_1);delay(500);
+  printByte_1(columnE50_1);delay(500);printByte_1(columnE51_1);delay(500);printByte_1(columnE52_1);delay(500);printByte_1(columnE53_1);delay(500);
+  printByte_1(columnE54_1);delay(500);printByte_1(columnE55_1);delay(500);printByte_1(columnE56_1);delay(500);printByte_1(columnE57_1);delay(500);printByte_1(columnE58_1);delay(500);printByte_1(columnE59_1);delay(500);
+  printByte_1(columnE60_1);delay(500);printByte_1(columnE61_1);delay(500);printByte_1(columnE62_1);delay(500);printByte_1(columnE63_1);delay(500);printByte_1(columnE64_1);delay(500);printByte_1(columnE65_1);delay(500);
+  printByte_1(columnE66_1);delay(500);printByte_1(columnE67_1);delay(500);printByte_1(columnE68_1);delay(500);printByte_1(columnE69_1);delay(500);printByte_1(columnE70_1);delay(500);printByte_1(columnE71_1);delay(500);
+  printByte_1(columnE72_1);delay(500);printByte_1(columnE73_1);delay(500);printByte_1(columnE74_1);delay(500);printByte_1(columnE75_1);delay(500);printByte_1(columnE76_1);delay(500);printByte_1(columnE77_1);delay(500);
+  printByte_1(columnE78_1);delay(500);printByte_1(columnE79_1);delay(500);printByte_1(columnE80_1);delay(500);printByte_1(columnE81_1);delay(500);printByte_1(columnE82_1);delay(500);printByte_1(columnE83_1);delay(500);
+  printByte_1(columnE84_1);delay(500);printByte_1(columnE85_1);delay(500);printByte_1(columnE86_1);delay(500);printByte_1(columnE87_1);delay(500);printByte_1(columnE88_1);delay(500);printByte_1(columnE89_1);delay(500);printByte_1(columnE90_1);delay(500);
+  //la
+  printByte(columnE91_0);delay(500);printByte(columnE92_0);delay(500);printByte(columnE93_0);delay(500);printByte(columnE94_0);delay(500);printByte(columnE95_0);delay(500);printByte(columnE96_0);delay(500);printByte(columnE97_0);delay(500);
+  printByte(columnE98_0);delay(500);printByte(columnE99_0);delay(500);printByte(columnE100_0);delay(500);printByte(columnE101_0);delay(500);printByte(columnE102_0);delay(500);printByte(columnE103_0);delay(500);printByte(columnE104_0);delay(500);
+  //ac
+  printByte_1(columnE105_1);delay(500);printByte(columnE106_0);delay(500);printByte(columnE107_0);delay(500);printByte(columnE108_0);delay(500);printByte(columnE109_0);delay(500);printByte(columnE110_0);delay(500);printByte(columnE111_0);delay(500);
+  printByte(columnE112_0);delay(500);printByte(columnE113_0);delay(500);printByte(columnE114_0);delay(500);printByte(columnE115_0);delay(500);printByte(columnE116_0);delay(500);printByte(columnE117_0);delay(500);printByte(columnE118_0);delay(500);
+  delay(1500);clearME();
+  }
+ 
+ //groupdance
+ if(!strcmp(inStr, "groupdance")){clearME();
+ int x = 2000;
+ while(x != 0)
+ {
+    printByte(alkali_0);
+    delay(x);
+    clearME();
+    printByte(earth_met_0);
+    delay(x);
+    clearME();
+    printByte(lanthanoid_0);
+    delay(x);
+    clearME();
+    printByte(actinod_0);printByte_1(actinod_1);
+    delay(x);
+    clearME();
+    printByte(transition_0);printByte_1(transition_1);
+    delay(x);
+    clearME();
+    printByte_1(other_meta_1);
+    delay(x);
+    clearME();
+    printByte_1(metalloids_1);
+    delay(x);
+    clearME();
+    printByte(other_non_0);printByte_1(other_non_1);
+    delay(x);
+    clearME();
+    printByte_1(halogens_1);
+    delay(x);
+    clearME();
+    printByte_1(nobel_1);
+    delay(x);
+    clearME();
+    x = x - 500;
+  }
+  printByte(all_0);
+  printByte_1(all_1);
+  delay(2000);
+  clearME();
+ }
+}
+
+void printByte(const byte character[]){
+  byte k;
+  uint8_t i;
+  for (k=0,i=0; k<8,i<8; i++,k++){lc_0.setRow(0,i, pgm_read_byte_near(&character[k]));}
+}
+
+void printByte_1(const byte character[]){
+  byte k;
+  uint8_t i;
+  for (k=0,i=0; k<8,i<8; k++,i++){lc_0.setRow(1,i, pgm_read_byte_near(&character[k]));}
+}
