@@ -7,8 +7,9 @@
 #define CLOCK 10
 #define CS 11
 
-char Incoming[15]; // bluetooth commands get turned into character array for parsing 
+char Incoming[15]; // bluetooth commands get turned into character array for parsing
 
+// This array is defined to control the periodictable using scrollbar for elements discovery
 /*const uint16_t discovered[118] PROGMEM = {1766, 1817, 1807, 1807, 1861, 1860, 1939, 1803,
                                   1913, 1797, 1755, 1808, 1790, 1808, 1898, 1885,
                                   1789, 1950, 1886, 1879, 1794, 1839, 1899, 1885,
@@ -220,6 +221,7 @@ const byte A8C7[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02};
 //terbium
 const byte A8C8[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01};
 
+// Array elements to be used if uing a scrol bar or futire improvements
 /*const byte* elements[] = {A1C1, A1C2, A1C3, A1C4, A1C5, A1C6, A1C7, A1C8,
                        A2C1, A2C2, A2C3, A2C4, A2C5, A2C6, A2C7, A2C8,
                        A3C1, A3C2, A3C3, A3C4, A3C5, A3C6, A3C7, A3C8,
@@ -300,7 +302,8 @@ const byte eighteen_0[] PROGMEM = {0x80,0x68,0x88,0x18,0x00,0x1c,0x10,0x00};
 const byte eighteen_1[] PROGMEM = {0x10,0x14,0x00,0x00,0x00,0x01,0x40,0x48};
 //Nineteen
 const byte nineteen_0[] PROGMEM = {0x7d,0x17,0x37,0x20,0x3d,0x20,0x21,0x0d};
-const byte nineteen_1[] PROGMEM = {0x0c,0x08,0x00,0x89,0xfd,0xb0,0x81,0x94};
+// (EDIT) element on the 7th row and column 6 on matrix 2 lights up by both 20 C and 21C 
+// (EDIT) And element on the 7th row and column 8 on matrix 2 element is not lighting up i think it is 21 C
 //Twenty
 const byte twenty_0[] PROGMEM = {0x02,0x80,0x40,0xc7,0xc2,0xc3,0xce,0xe2};
 const byte twenty_1[] PROGMEM = {0x02,0x02,0x83,0x02,0x00,0x02,0x00,0x00};
@@ -354,7 +357,6 @@ const byte hydrochloricacid_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x
 //LiOH Lithiumhydroxide
 const byte lithiumhydroxide_0[] PROGMEM = {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 const byte lithiumhydroxide_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x40};
-
 
 //block
 //S block
@@ -579,6 +581,27 @@ const byte columnE116_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xbf,0xbf};
 const byte columnE117_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xbf};
 const byte columnE118_0[] PROGMEM = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
 
+
+//valance electron
+//only for s and p block elements
+//VE_1
+const byte VE1_0[] PROGMEM = {0xfe,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+//VE_2
+const byte VE2_0[] PROGMEM = {0x00,0x7e,0x00,0x00,0x00,0x00,0x00,0x00};
+const byte VE2_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
+//VE_3
+const byte VE3_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x7e,0x00,0x00,0x00};
+//VE_4
+const byte VE4_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x7e,0x00,0x00};
+//VE_5
+const byte VE5_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x7e,0x00};
+//VE_6
+const byte VE6_1[] PROGMEM = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7e};
+//VE_7
+const byte VE7_1[] PROGMEM = {0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x00};
+//VE_8
+const byte VE8_1[] PROGMEM = {0x00,0x80,0x80,0x80,0x80,0x80,0x80,0x00};
+
 void clearME()
 {
   lc_0.clearDisplay(0);
@@ -589,8 +612,9 @@ void setup() {
   lc_0.shutdown(0, false); // activating the first matrix
   lc_0.shutdown(1, false); // activating the second matrix
   lc_0.setIntensity(0, 6); // seting the brightness of the first matrix
-  // the maximum brightness constroled with software is 15 ofcourse it also depends on the resistors
-  // the other specific thing about this project on brightness is that it will crush if you make the brightness level to high I think it is because the resistors I used
+  // the maximum brightness constroled with software is 15 ofcourse it also depends on the resistors you connet to the max7219
+  // for this project I set it up to 6 which gave me enough brightness.
+  // but when I increase the brightness above 7 it make IC to be unsatble. And I think that works for spcific resistors I used
   lc_0.setIntensity(1, 6); // seting the brightness of the second matrix
   lc_0.clearDisplay(0); // clearing display for the first matrix
   lc_0.clearDisplay(1); // clearing display for second matrix
@@ -603,46 +627,12 @@ void loop() {
   if (Serial.available() > 0)
   {
     state = Serial.readString();
-    /*
-    if (Incoming[0]== 'T')
-    {
-      int TF = atoi(Incoming);
-      Serial.println("Temp: " + TF); 
-    }
-    else if(Incoming[0] == 'D')
-    {
-      int DF = atoi(Incoming);
-      Serial.println("Discovry: " + DF);
-      displayDiscovery(DF);
-    }
-    else
-    {
-    Serial.println("Command: " + String(Incoming));
-    state.toCharArray(Incoming, 15);
-    checkCommands(Incoming);
-    }
-    */
+  
 //    Serial.println("Command: " + String(Incoming));
     state.toCharArray(Incoming, 15);
     checkCommands(Incoming);
   }
 }
-
-/*void displayDiscovery(int year){
-  clearME();
-  for (int i = 0; i<118; i++){
-    if(pgm_read_word_near(discovered + i) <= year){
-      if (i<=64){
-        printByte(elements[i]);
-        delay(wait);
-        }
-       else if (i>65){
-        printByte_1(elements[i]);
-        delay(wait);
-        }}
-    }
-  }
-*/
 
 //when command is recieved this function is called.
 //The function compares its known commands to the one recieved. If there is a match
@@ -981,6 +971,18 @@ void checkCommands(char inStr[]){
   delay(2000);
   clearME();
  }
+ //clear button
+ if(!strcmp(inStr, "clear")){clearME();}
+
+ //based on valance electron
+ if(!strcmp(inStr, "ve_1")){clearME();printByte(VE1_0);}
+ if(!strcmp(inStr, "ve_2")){clearME();printByte(VE2_0);printByte_1(VE2_1);}
+ if(!strcmp(inStr, "ve_3")){clearME();printByte_1(VE3_1);}
+ if(!strcmp(inStr, "ve_4")){clearME();printByte_1(VE4_1);}
+ if(!strcmp(inStr, "ve_5")){clearME();printByte_1(VE5_1);}
+ if(!strcmp(inStr, "ve_6")){clearME();printByte_1(VE6_1);}
+ if(!strcmp(inStr, "ve_7")){clearME();printByte_1(VE7_1);}
+ if(!strcmp(inStr, "ve_8")){clearME();printByte_1(VE8_1);}
 }
 
 void printByte(const byte character[]){
@@ -994,3 +996,5 @@ void printByte_1(const byte character[]){
   uint8_t i;
   for (k=0,i=0; k<8,i<8; k++,i++){lc_0.setRow(1,i, pgm_read_byte_near(&character[k]));}
 }
+//ALL TEST PASSED SOME EDITS ON 20 and 21 C on element timeline required
+//Developed By Eyasu Hailegebriel
