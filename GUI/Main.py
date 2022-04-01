@@ -1,15 +1,10 @@
 # Things to be done
-# some elements are not defined
-# Add other window for other button like the groups commpounds same as the phone app
-# And also add other function for each lambda for the voice description
 # And if you have time add other information on text[1] like block, valance electrons
 # Then finally convert this to .exe
 
 
 import tkinter as tk
 import Main
-import Help
-import about
 from PIL import ImageTk, Image
 from tkinter import PhotoImage, NW
 from tkinter import messagebox as msg
@@ -18,13 +13,15 @@ from tkinter import messagebox as msg
 from tkinter import FLAT, RAISED, SUNKEN, GROOVE, RIDGE
 import serial
 import pyttsx3
+from pyttsx3.drivers import sapi5
 #import customtkinter
 
 
 try:
     nano = serial.Serial(port='COM4', baudrate=9800, timeout=.1)
 except:
-    print("Could not open port")
+    #print("Could not open port")
+    pass
 
 #customtkinter.set_appearance_mode("Dark")
 
@@ -1941,20 +1938,23 @@ class App(tk.Frame):
 
     # sends command to the arduino
     def arduino(self, text):
-        byte_msg = bytes(text, 'utf-8')
+        byte_msg = text.encode('utf-8')
+        #byte_msg = bytes(text, 'utf-8')
         if text == "exit":
             try:
                 nano.close()
             except:
                 # comment this out or chang the statement
-                print("close but nano is not connected")
+                # print("close but nano is not connected")
+                pass
         else:
-            print(byte_msg)
+            #print(byte_msg)
             try:
                 nano.write(byte_msg)
             except:
                 # comment this out or change the statement
-                print("some element but nano is not defined")
+                # print("some element but nano is not defined")
+                pass
 
     # voice description
     def voice(self, text):
@@ -2534,12 +2534,12 @@ class Second(tk.Frame):
             ('Sm', 'Samarium', 'Oxidation states: 2, 3\nConfiguration: [Xe] 6s² 4f⁶\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁶\nEnergy levels: 2, 8, 18, 24, 8, 2\nQuantum numbers: l=3, m=2, n=4', '62', '150.40'),
             ('Eu', 'Europium', 'Oxidation states: 2, 3\nConfiguration: [Xe] 6s² 4f⁷\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ \n4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁷\nEnergy levels: 2, 8, 18, 25, 8, 2\nQuantum numbers: l=3, m=3, n=4', '63', '151.96'),
             ('Gd', 'Gadolinium', 'Oxidation states: 1, 2, 3\nConfiguration: [Xe] 6s² 4f⁷ 5d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s²\n 3d¹⁰ 4p⁶ 5s² 4d¹⁰\n 5p⁶ 6s² 4f⁷ 5d¹\nEnergy levels: 2, 8, 18, 25, 9, 2\nQuantum numbers: l=2, m=-2, n=5', '64', '157.25'),
-            ('Tb', 'l=, m=, n=', '65', '158.93'),
-            ('Dy', 'Dyprosium', '', '66', '162.50'),
-            ('Ho', 'Holmium', '', '67', '164.93'),
-            ('Er', 'Erbium', '', '68', '167.26'),
-            ('Tm', 'Thulium', '', '69', '168.93'),
-            ('Yb', 'Ytterbium', '', '70', '173.04')]
+            ('Tb', 'Oxidation states: 1, 3, 4\nConfiguration: [Xe] 6s² 4f⁹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁹\nEnergy levels: 2, 8, 18, 27, 8, 2\nQuantum numbers: l=3, m=-2, n=4', '65', '158.93'),
+            ('Dy', 'Dyprosium', 'Oxidation states: 2, 3\nConfiguration: [Xe] 6s² 4f¹⁰\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁰\nEnergy levels: 2, 8, 18, 28, 8, 2\nQuantum numbers: l=3, m=-1, n=4', '66', '162.50'),
+            ('Ho', 'Holmium', 'Oxidation states: 3\nConfiguration: [Xe] 6s² 4f¹¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹¹\nEnergy levels: 2, 8, 18, 29, 8, 2\nQuantum numbers: l=3, m=0, n=4', '67', '164.93'),
+            ('Er', 'Erbium', 'Oxidation states: 3\nConfiguration: [Xe] 6s² 4f¹²\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹²\nEnergy levels: 2, 8, 18, 30, 8, 2\nQuantum numbers: l=3, m=1, n=4', '68', '167.26'),
+            ('Tm', 'Thulium', 'Oxidation states: 2, 3\nConfiguration: [Xe] 6s² 4f¹³\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ \n4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹³\nEnergy levels: 2, 8, 18, 31, 8, 2\nQuantum numbers: l=3, m=2, n=4', '69', '168.93'),
+            ('Yb', 'Ytterbium', 'Oxidation states: 2, 3\nConfiguration: [Xe] 6s² 4f¹⁴\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴\nEnergy levels: 2, 8, 18, 32, 8, 2\nQuantum numbers: l=3, m=3, n=4', '70', '173.04')]
         r = 13
         c = 5
         self.f_block_c_2={}
@@ -2559,7 +2559,7 @@ class Second(tk.Frame):
                 r += 1
 
         d_block_20 = [
-            ('Lu', 'Lutetium', '', '71', '174.97')]
+            ('Lu', 'Lutetium', 'Oxidation states: 3\nConfiguration: [Xe] 6s² 4f¹⁴ 5d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ \n4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹\nEnergy levels: 2, 8, 18, 32, 9, 2\nQuantum numbers: l=2, m=-2, n=5', '71', '174.97')]
         r = 13
         c = 18
         self.d_block_c_20={}
@@ -2579,19 +2579,19 @@ class Second(tk.Frame):
                 r += 1
 
         f_block_3 = [
-            ('Th', 'Thorium', '', '90', '232.04'),
-            ('Pa', 'Protactinium', '', '91', '231.04'),
-            ('U', 'Uranium', '', '92', '238.03'),
-            ('Np', 'Neptunium', '', '93', '237.05'),
-            ('Pu', 'Plutonium', '', '94', '244.00'),
-            ('Am', 'Americium', '', '95', '243.00'),
-            ('Cm', 'Curium', '', '96', '247.00'),
-            ('Bk', 'Berkelium', '', '97', '247.00'),
-            ('Cf', 'Californium', '', '98', '247.00'),
-            ('Es', 'Einsteinium', '', '99', '252.00'),
-            ('Fm', 'Fermium', '', '100', '257.00'),
-            ('Md', 'Mendelevium', '', '101', '260.00'),
-            ('No', 'Nobelium', '', '102', '259.00')]
+            ('Th', 'Thorium', 'Oxidation states: 2, 3, 4\nConfiguration: [Rn] 7s² 6d²\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ \n6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 6d²\nEnergy levels: 2, 8, 18, 32, 18, 10, 2\nQuantum numbers: l=2, m=-1, n=6', '90', '232.04'),
+            ('Pa', 'Protactinium', 'Oxidation states: 2, 3, 4, 5\nConfiguration: [Rn] 7s² 5f² 6d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ \n5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f² 6d¹\nEnergy levels: 2, 8, 18, 32, 20, 9, 2\nQuantum numbers: l=2, m=-2, n=6', '91', '231.04'),
+            ('U', 'Uranium', 'Oxidation states: 2, 3, 4, 5, 6\nConfiguration: [Rn] 7s² 5f³ 6d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ \n6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f³ 6d¹\nEnergy levels: 2, 8, 18, 32, 21, 9, 2\nQuantum numbers: l=2, m=-2, n=6', '92', '238.03'),
+            ('Np', 'Neptunium', 'Oxidation states: 3, 4, 5, 6, 7\nConfiguration: [Rn] 7s² 5f⁴ 6d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ \n6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁴ 6d¹\nEnergy levels: 2, 8, 18, 32, 22, 9, 2\nQuantum numbers: l=2, m=-2, n=6', '93', '237.05'),
+            ('Pu', 'Plutonium', 'Oxidation states: 3, 4, 5, 6, 7, 8\nConfiguration: [Rn] 7s² 5f⁶\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ \n6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁶\nEnergy levels: 2, 8, 18, 32, 24, 8, 2\nQuantum numbers: l=3, m=3, n=5', '94', '244.00'),
+            ('Am', 'Americium', 'Oxidation states: 2, 3, 4, 5, 6\nConfiguration: [Rn] 7s² 5f⁷\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ \n4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ \n5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁷\nEnergy levels: 2, 8, 18, 32, 25, 8, 2\nQuantum numbers: l=3, m=3, n=5', '95', '243.00'),
+            ('Cm', 'Curium', 'Oxidation states: 3, 4\nConfiguration: [Rn] 7s² 5f⁷ 6d¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² \n4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁷ 6d¹\nEnergy levels: 2, 8, 18, 32, 25, 9, 2\nQuantum numbers; l=2, m=-2, n=6', '96', '247.00'),
+            ('Bk', 'Berkelium', 'Oxidation states: 3, 4\nConfiguration: [Rn] 7s² 5f⁹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ \n5d¹⁰ 6p⁶ 7s² 5f⁹\nEnergy levels: 2, 8, 18, 32, 27, 8, 2\nQuantum numbers: l=3, m=-2, n=5', '97', '247.00'),
+            ('Cf', 'Californium', 'Oxidation states: 2, 3, 4\nConfiguration: [Rn] 7s² 5f¹⁰\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s²\n 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶\n 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁰\nEnergy levels: 2, 8, 18, 32, 28, 8, 2\nQuantum numbers: l=3, m=-1, n=5', '98', '247.00'),
+            ('Es', 'Einsteinium', 'Oxidation states: 2, 3\nConfiguration: [Rn] 7s² 5f¹¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² \n4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹¹\nEnergy levels: 2, 8, 18, 32, 29, 8, 2\nQuantum numbers: l=3, m=0, n=5', '99', '252.00'),
+            ('Fm', 'Fermium', 'Oxidation states: 2, 3\nConfiguration: [Rn] 7s² 5f¹²\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² \n4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹²\nEnergy levels: 2, 8, 18, 32, 30, 8, 2\nQuantum numbers: l=3, m=1, n=5', '100', '257.00'),
+            ('Md', 'Mendelevium', 'Oxidation states: 2, 3\nConfiguration: [Rn] 7s² 5f¹³\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ \n5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹³\nEnergy levels: 2, 8, 18, 32, 31, 8, 2\nQuantum numbers: l=3, m=2, n=5', '101', '260.00'),
+            ('No', 'Nobelium', 'Oxidation states: 2, 3\nConfiguration: [Rn] 7s² 5f¹⁴\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ \n6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴\nEnergy levels: 2, 8, 18, 32, 32, 8, 2\nQuantum numbers: l=3, m=3, n=5', '102', '259.00')]
         r = 14
         c = 5
         self.f_block_c_3={}
@@ -2611,7 +2611,7 @@ class Second(tk.Frame):
                 r += 1
 
         d_block_21 = [
-            ('Lr', 'Lawrencium', 'Atomic # = 103\nAtomic Weight = 262.00\nState = Synthetic\nCategory = Trans Metals', '103', '262.00')]
+            ('Lr', 'Lawrencium', 'Oxidation states: 3\nConfiguration: [Rn] 7s² 5f¹⁴ 7p¹\nExpanded: - \n1s² 2s² 2p⁶ 3s² 3p⁶ 4s² \n3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² \n4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 7p¹\nEnergy levels: 2, 8, 18, 32, 32, 8, 3\nQuantum numbers: l=1, m=-1, n=7', '103', '262.00')]
         r = 14
         c = 18
         self.d_block_c_21={}
@@ -2765,20 +2765,23 @@ class Second(tk.Frame):
 
     # sends command to the arduino
     def arduino(self, text):
-        byte_msg = bytes(text, 'utf-8')
+        byte_msg = text.encode('utf-8')
+        #byte_msg = bytes(text, 'utf-8')
         if text == "exit":
             try:
                 nano.close()
             except:
                 # comment this out or chang the statement
-                print("close but nano is not connected")
+                # print("close but nano is not connected")
+                pass
         else:
-            print(byte_msg)
+            #print(byte_msg)
             try:
                 nano.write(byte_msg)
             except:
                 # comment this out or change the statement
-                print("some element but nano is not defined")
+                # print("some element but nano is not defined")
+                pass
 
     # voice description
     def voice(self, text):
@@ -3050,20 +3053,23 @@ class Third(tk.Frame):
 
     # sends command to the arduino
     def arduino(self, text):
-        byte_msg = bytes(text, 'utf-8')
+        byte_msg = text.encode('utf-8')
+        #byte_msg = bytes(text, 'utf-8')
         if text == "exit":
             try:
                 nano.close()
             except:
                 # comment this out or chang the statement
-                print("close but nano is not connected")
+                # print("close but nano is not connected")
+                pass
         else:
-            print(byte_msg)
+            #print(byte_msg)
             try:
                 nano.write(byte_msg)
             except:
                 # comment this out or change the statement
-                print("some element but nano is not defined")
+                # print("some element but nano is not defined")
+                pass
 
     # voice description
     def voice(self, text):
@@ -3090,7 +3096,7 @@ class Four(tk.Frame):
             ('Silicon Dioxide', 'Silicon Dioxide SiO2', 'SiO2'),
             ('Hydrochloric Acid', 'Hydrochloric Acid HCl', 'HCl'),
             ('Lithium Hydroxide', 'Lithium Hydroxide LiOH', 'LiOH'),
-            ('Metahne', 'Metahne CH4', 'CH4'),
+            ('Methane', 'Methane CH4', 'CH4'),
             ('Ammonia', 'Ammonia NH3', 'NH3'),
             ('Sulfuric Acid', 'Sulfuric Acid H2S04', 'H2S04'),
             ('Citric Acid', 'Citric Acid C6H8O7', 'C6H8O7'),
@@ -3118,13 +3124,13 @@ class Four(tk.Frame):
 
         """=======================================Compositions======================================="""
         composition = [
-            ('Human', 'Elements Composition\n in human body', 'human'),
-            ('Plant', 'Elements Composition\n in plants', 'plant'),
-            ('Solar', 'Elements Composition\n in the solar system', 'solar'),
-            ('Atmosphere', 'Elements Composition\n in the Atmosphere', 'atm'),
-            ('Earth Crust', 'Elements Composition\n in the earth crust', 'crust'),
-            ('Ocean', 'Elements Composition\n in the Ocean', 'ocean'),
-            ('Universe', 'Elements Composition\n in the universe', 'universe')]
+            ('Human', 'Elements Composition\n in human body', 'human', 'Elements Composition in human body'),
+            ('Plant', 'Elements Composition\n in plants', 'plant', 'Elements Composition in plants'),
+            ('Solar', 'Elements Composition\n in the solar system', 'solar', 'Elements Composition in the solar system'),
+            ('Atmosphere', 'Elements Composition\n in the Atmosphere', 'atm', 'Elements Composition in the Atmosphere'),
+            ('Earth Crust', 'Elements Composition\n in the earth crust', 'crust', 'Elements Composition in the earth crust'),
+            ('Ocean', 'Elements Composition\n in the Ocean', 'ocean', 'Elements Composition in the Ocean'),
+            ('Universe', 'Elements Composition\n in the universe', 'universe', 'Elements Composition in the universe')]
         r = 1
         c = 8
         self.composition_c={}
@@ -3136,7 +3142,7 @@ class Four(tk.Frame):
                       font=10,
                       borderwidth = 3,
                       bg="gray",
-                      command=lambda text=b: [self.name(text[0]) + self.info(text[1]), self.arduino(text[2]), self.voice(text[1])])
+                      command=lambda text=b: [self.name(text[0]) + self.info(text[1]), self.arduino(text[2]), self.voice(text[3])])
             self.composition_c[b[0]].grid(row=r, column=c, columnspan=2)
             r += 1
             if r > 8: 
@@ -3212,20 +3218,23 @@ class Four(tk.Frame):
 
     # sends command to the arduino
     def arduino(self, text):
-        byte_msg = bytes(text, 'utf-8')
+        byte_msg = text.encode('utf-8')
+        #byte_msg = bytes(text, 'utf-8')
         if text == "exit":
             try:
                 nano.close()
             except:
                 # comment this out or chang the statement
-                print("close but nano is not connected")
+                # print("close but nano is not connected")
+                pass
         else:
-            print(byte_msg)
+            #print(byte_msg)
             try:
                 nano.write(byte_msg)
             except:
                 # comment this out or change the statement
-                print("some element but nano is not defined")
+                # print("some element but nano is not defined")
+                pass
 
     # voice description
     def voice(self, text):
@@ -3245,7 +3254,7 @@ def main():
     # the buttons are not working and loading when importing undo that by __name__ == "__main__"
     help_menu.add_command(label="About", command=aboout)
     help_menu.add_command(label="Help", command=hellp)
-    setting_menu = Menu(menu_bar, tearoff=0, )
+    setting_menu = Menu(menu_bar, tearoff=0)
     setting_menu.add_command(label="Setting", command=settting)
     menu_bar.add_cascade(label="Setting", menu=setting_menu)
     menu_bar.add_cascade(label="Help", menu=help_menu)
@@ -3275,20 +3284,29 @@ def hellp():
     hell.title("Help")
     #hell.geometry("250x150")
     hell.resizable(False, False)
-    l = ttk.Label(hell, text="Help").config()
-    l.config(font=("Courier", 14), column=0, row=0)
-    x = ttk.Label(hell, text="To control the arduino using this software\nfirst connect your arduino usng the USB\nthen configure the port and baud rate in the setting\nthen enjoy the show")
-    x.config(font="OCR A Std", 13)
+    l = ttk.Label(hell, text="Help", font=("Courier", 14))
+    x = ttk.Label(hell, text="To control the arduino using this software\nfirst connect your arduino usng the USB\nthen configure the port and baud rate in the setting\nAnd enjoy the show")
+    x.config(font=('Helvetica 15 bold', 13))
     b = tk.Button(hell, text="Exit",
                command = hell.destroy)
-    x.pack()
     l.pack()
+    x.pack()
     b.pack()
     pass
 
 def aboout():
+    aboo = tk.Tk()
+    aboo.title("About")
     # description on about
-    msg.showinfo("Help", "This GUI is developed to control interactive periodic table")
+    aboo.resizable(False, False)
+    l = ttk.Label(aboo, text="About", font=("Courier", 14))
+    x = ttk.Label(aboo, text="This GUI is developed to control interactive periodic table\nTo contact me \nemail: eyasuhailegbr@gmail.com")
+    x.config(font=('Helvetica 15 bold', 13))
+    b = tk.Button(aboo, text="Exit",
+               command = aboo.destroy)
+    l.pack()
+    x.pack()
+    b.pack()
     pass
 
 def settting():
@@ -3330,25 +3348,6 @@ def settting():
 
     act = ttk.Button(mig, text="Settup", command=settup)
     act.grid(column=1, row=3, sticky=tk.W, columnspan=3)
-
-    """def radio():
-        radSel=radVar.get()
-        if radSel==1: print("Male")
-        elif radSel==0: print("Female")
-
-    radVar = tk.IntVar()
-        
-    rad1 = tk.Radiobutton(mig, text="Male voice", variable=radVar, value=1, command=radios)
-    rad1.grid(column=0, row=2, sticky=tk.W, columnspan=4)
-    rad1.deselect()
-
-    rad2 = tk.Radiobutton(mig, text="Feamle Voice", variable=radVar, value=2, command=radio)
-    rad2.grid(column=1, row=2, sticky=tk.W, columnspan=4)
-    rad2.deselect()"""
-    
-
-    
-    pass
 
 
 # runs main function
